@@ -15,15 +15,13 @@ import com.tuling.jucdemo.factory.UnsafeFactory;
 public  class VisibilityTest {
     //  storeLoad  JVM内存屏障  ---->  (汇编层面指令)  lock; addl $0,0(%%rsp)
     // lock前缀指令不是内存屏障的指令，但是有内存屏障的效果   缓存失效
-//    private volatile boolean flag = true;
     private boolean flag = true;
     private int count = 0;
 
     public void refresh() {
         // threadB对flag的写操作会 happens-before threadA对flag的读操作
-            flag = false;
-            System.out.println(Thread.currentThread().getName() + "修改flag:"+flag);
-
+        flag = false;
+        System.out.println(Thread.currentThread().getName() + "修改flag:"+flag);
     }
 
     public void load() {
@@ -36,7 +34,7 @@ public  class VisibilityTest {
             //能够跳出循环   内存屏障
             //UnsafeFactory.getUnsafe().storeFence();
             //能够跳出循环    ?   释放时间片，上下文切换   加载上下文：flag=true
-            Thread.yield();
+            //Thread.yield();
             //能够跳出循环    内存屏障
             //System.out.println(count);
 
@@ -50,7 +48,6 @@ public  class VisibilityTest {
 //            while (start + 1000000 >= end) {
 //                end = System.nanoTime();
 //            }
-
 
 //            try {
 //                Thread.sleep(1);   //内存屏障
@@ -66,9 +63,7 @@ public  class VisibilityTest {
             // volatile  锁机制
             //当前线程对共享变量的操作会存在读不到，或者不能立即读到另一个线程对此变量的写操作
 
-
             // lock 硬件层面扩展      JMM为什么选择共享内存模型
-
 
         }
         System.out.println(Thread.currentThread().getName() + "跳出循环: count=" + count);

@@ -10,7 +10,7 @@ public class ThreadInterruptTest {
 
     static int i = 0;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)  {
         System.out.println("begin");
         Thread t1 = new Thread(new Runnable() {
             @Override
@@ -18,11 +18,11 @@ public class ThreadInterruptTest {
                 while (true) {
                     i++;
                     System.out.println(i);
-//                    try {
-//                        Thread.sleep(10000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     //Thread.interrupted()  清除中断标志位
                     //Thread.currentThread().isInterrupted() 不会清除中断标志位
