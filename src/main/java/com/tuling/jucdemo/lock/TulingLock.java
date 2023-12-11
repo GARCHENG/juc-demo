@@ -10,6 +10,7 @@ public class TulingLock extends AbstractQueuedSynchronizer{
 
     @Override
     protected boolean tryAcquire(int unused) {
+        //cas 加锁  state=0
         if (compareAndSetState(0, 1)) {
             setExclusiveOwnerThread(Thread.currentThread());
             return true;
@@ -19,6 +20,7 @@ public class TulingLock extends AbstractQueuedSynchronizer{
 
     @Override
     protected boolean tryRelease(int unused) {
+        //释放锁
         setExclusiveOwnerThread(null);
         setState(0);
         return true;
