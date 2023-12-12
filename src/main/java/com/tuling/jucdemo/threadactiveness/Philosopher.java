@@ -42,17 +42,11 @@ public class Philosopher extends Thread {
             // 获得左手筷子
             synchronized (left) {
                 log.debug("获得左手筷子" + left.getNumber());
-//                try {
-//                    left.wait(10);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 // 获得右手筷子
                 synchronized (right) {
                     log.debug("获得右手筷子" + right.getNumber());
                     // 吃饭
                     eat();
-                    //left.notifyAll();
                 }
                 // 放下右手筷子
             }
@@ -61,5 +55,7 @@ public class Philosopher extends Thread {
             think();
         }
     }
+
+    // 思考： 如何用ReentrentLock+Condition实现
 
 }
