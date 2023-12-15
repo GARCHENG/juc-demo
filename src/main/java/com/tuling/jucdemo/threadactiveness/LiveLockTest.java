@@ -60,6 +60,8 @@ public class LiveLockTest {
                             log.info( "{}：亲爱的我饿了，然后{}把勺子给了{}",
                                     diner.getName(),name,diner.getName());
                             sharedSpoon.setOwner(diner);
+                            //用餐
+                            sharedSpoon.use();
                             //唤醒等待的线程
                             sharedSpoon.notifyAll();
                         } else {

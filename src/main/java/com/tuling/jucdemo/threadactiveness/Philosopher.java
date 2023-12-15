@@ -58,4 +58,5 @@ public class Philosopher extends Thread {
 
     // 思考： 如何用ReentrentLock+Condition实现
 
+
 }

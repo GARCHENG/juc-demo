@@ -17,16 +17,16 @@ public class ReadWriteLockTest {
         final Queue queue = new Queue();
 
 
-        for (int i = 0; i < 3; i++) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    queue.put(new Random().nextInt(10000));
-                }
-            }).start();
-        }
+//        for (int i = 0; i < 3; i++) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    queue.put(new Random().nextInt(10000));
+//                }
+//            }).start();
+//        }
 
-        Thread.sleep(100);
+//        Thread.sleep(100);
 
         for (int i = 0; i < 3; i++) {
             new Thread(new Runnable() {
