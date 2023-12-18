@@ -11,8 +11,8 @@ public class PriorityBlockingQueueDemo {
 
     public static void main(String[] args) throws InterruptedException {
         //创建优先级阻塞队列  Comparator为null,自然排序
-        PriorityBlockingQueue<Integer> queue=new PriorityBlockingQueue<Integer>(5);
-        // 自定义Comparator
+        PriorityBlockingQueue<Integer> queue=new PriorityBlockingQueue<Integer>(3);
+//         自定义Comparator
 //        PriorityBlockingQueue queue=new PriorityBlockingQueue<Integer>(
 //                5, new Comparator<Integer>() {
 //            @Override

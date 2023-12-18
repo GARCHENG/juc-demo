@@ -1,134 +1,71 @@
 package com.tuling.jucdemo.blokingqueue.delayqueue;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.util.StringUtils;
-
 public class DelayQueueDemo {
-
-    static class Cache implements Runnable {
-
-        private boolean stop = false;
-
-        private Map<String, String> itemMap = new HashMap<>();
-
-        private DelayQueue<CacheItem> delayQueue = new DelayQueue<>();
-
-        public Cache () {
-            // 开启内部线程检测是否过期
-            new Thread(this).start();
-        }
-
-        /**
-         * 添加缓存
-         *
-         * @param key
-         * @param value
-         * @param exprieTime&emsp;过期时间,单位秒
-         */
-        public void put (String key, String value, long exprieTime) {
-            CacheItem cacheItem = new CacheItem(key, exprieTime);
-
-            // 此处忽略添加重复 key 的处理
-            delayQueue.add(cacheItem);
-            itemMap.put(key, value);
-        }
-
-        public String get (String key) {
-            return itemMap.get(key);
-        }
-
-        public void shutdown () {
-            stop = true;
-        }
-
-        @Override
-        public void run() {
-            while (!stop) {
-                CacheItem cacheItem = delayQueue.poll();
-                if (cacheItem != null) {
-                    // 元素过期, 从缓存中移除
-                    itemMap.remove(cacheItem.getKey());
-                    System.out.println("key : " + cacheItem.getKey() + " 过期并移除");
-                }
-            }
-
-            System.out.println("cache stop");
-        }
-    }
-
-    static class CacheItem implements Delayed {
-
-        private String key;
-
-        /**
-         * 过期时间(单位秒)
-         */
-        private long exprieTime;
-
-        private long currentTime;
-
-        public CacheItem(String key, long exprieTime) {
-            this.key = key;
-            this.exprieTime = exprieTime;
-            this.currentTime = System.currentTimeMillis();
-        }
-
-        @Override
-        public long getDelay(TimeUnit unit) {
-            // 计算剩余的过期时间
-            // 大于 0 说明未过期
-            return exprieTime - TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - currentTime);
-        }
-
-        @Override
-        public int compareTo(Delayed o) {
-            // 过期时间长的放置在队列尾部
-            if (this.getDelay(TimeUnit.MICROSECONDS) > o.getDelay(TimeUnit.MICROSECONDS)) {
-                return 1;
-            }
-            // 过期时间短的放置在队列头
-            if (this.getDelay(TimeUnit.MICROSECONDS) < o.getDelay(TimeUnit.MICROSECONDS)) {
-                return -1;
-            }
-
-            return 0;
-        }
-
-        public String getKey() {
-            return key;
-        }
-    }
 
     public static void main(String[] args) throws InterruptedException {
 
-        Cache cache = new Cache();
+        //实例化一个DelayQueue
+        BlockingQueue<DelayObject> blockingQueue = new DelayQueue<>();
 
-        // 添加缓存元素
-        cache.put("a", "1", 5);
-        cache.put("b", "2", 4);
-        cache.put("c", "3", 3);
+        //向DelayQueue添加四个元素对象，注意延时时间不同
+        blockingQueue.put(new DelayObject("A", 1000 * 10));  //延时10秒
+        blockingQueue.put(new DelayObject("B", 4000 * 10));  //延时40秒
+        blockingQueue.put(new DelayObject("C", 3000 * 10));  //延时30秒
+        blockingQueue.put(new DelayObject("D", 2000 * 10));  //延时20秒
 
-        while (true) {
-            String a = cache.get("a");
-            String b = cache.get("b");
-            String c = cache.get("c");
+        //将对象从DelayQueue取出，注意取出的顺序与延时时间有关
+        System.out.println(blockingQueue.take());  //取出A
+        System.out.println(blockingQueue.take());  //取出D
+        System.out.println(blockingQueue.take());  //取出C
+        System.out.println(blockingQueue.take());  //取出B
 
-            System.out.println("a : " + a + ", b : " + b + ", c : " + c);
+    }
 
-            // 元素均过期后退出循环
-            if (StringUtils.isEmpty(a) && StringUtils.isEmpty(b) && StringUtils.isEmpty(c)) {
-                break;
-            }
+}
 
-            TimeUnit.MILLISECONDS.sleep(1000);
+
+class DelayObject implements Delayed {
+    private String name;
+    private long time;   //延时时间
+
+    public DelayObject(String name, long delayTime) {
+        this.name = name;
+        this.time = System.currentTimeMillis() + delayTime;
+    }
+
+    @Override
+    public long getDelay(TimeUnit unit) {
+        long diff = time - System.currentTimeMillis();
+        return unit.convert(diff, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public int compareTo(Delayed obj) {
+        if (this.time < ((DelayObject) obj).time) {
+            return -1;
         }
+        if (this.time > ((DelayObject) obj).time) {
+            return 1;
+        }
+        return 0;
+    }
 
-        cache.shutdown();
+    @Override
+    public String toString() {
+        Date date = new Date(time);
+        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        return "\nDelayObject:{"
+                + "name=" + name
+                + ", time=" + sd.format(date)
+                + "}";
     }
 }
 
