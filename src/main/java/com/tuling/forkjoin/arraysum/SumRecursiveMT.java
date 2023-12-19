@@ -59,7 +59,7 @@ public class SumRecursiveMT {
 
         //思考： 用 Executors.newFixedThreadPool可以吗？   定长线程的饥饿
         ExecutorService executorService = Executors.newFixedThreadPool(12);
-        //ExecutorService executorService = Executors.newCachedThreadPool();
+//        ExecutorService executorService = Executors.newCachedThreadPool();
          //递归任务 求和
         RecursiveSumTask task = new RecursiveSumTask(executorService, arr, 0, arr.length);
         //返回结果
