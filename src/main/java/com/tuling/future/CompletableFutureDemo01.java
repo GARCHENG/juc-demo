@@ -20,6 +20,7 @@ public class CompletableFutureDemo01 {
             return "Hello World";
         });
         String result = future.join();
+//        String result = future.get();
         System.out.println(result);
 
 
