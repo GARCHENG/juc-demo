@@ -3,7 +3,7 @@ package com.tuling.jvm;
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
 
-public class MyClassLoaderTest {
+public class MyClassLoaderTest1 {
     static class MyClassLoader extends ClassLoader {
         private String classPath;
 
