@@ -41,5 +41,32 @@ public class CompletableFutureDemo02 {
                 return "异常xxxx";
             }
         }).join();
+//
+//        CompletableFuture<String> future1 = CompletableFuture
+//                .supplyAsync(() -> {
+//                    try {
+//                        TimeUnit.SECONDS.sleep(2);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    System.out.println("future1完成！");
+//                    return "future1完成！";
+//                });
+//
+//        CompletableFuture<String> future2 = CompletableFuture
+//                .supplyAsync(() -> {
+//                    System.out.println("future2完成！");
+//                    return "future2完成！";
+//                });
+//
+//        CompletableFuture<Void> combindFuture = CompletableFuture
+//                .allOf(future1, future2);
+//        try {
+//            combindFuture.get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
     }
 }

@@ -33,11 +33,11 @@ public class DisruptorDemo {
         );
 
         //设置消费者用于处理RingBuffer的事件
-        //disruptor.handleEventsWith(new OrderEventHandler());
+//        disruptor.handleEventsWith(new OrderEventHandler());
         //设置多消费者,消息会被重复消费
-        //disruptor.handleEventsWith(new OrderEventHandler(),new OrderEventHandler());
+//        disruptor.handleEventsWith(new OrderEventHandler(),new OrderEventHandler());
         //设置多消费者,消费者要实现WorkHandler接口，一条消息只会被一个消费者消费
-        //disruptor.handleEventsWithWorkerPool(new OrderEventHandler(), new OrderEventHandler());
+        disruptor.handleEventsWithWorkerPool(new OrderEventHandler(), new OrderEventHandler());
 
         //启动disruptor
         disruptor.start();
