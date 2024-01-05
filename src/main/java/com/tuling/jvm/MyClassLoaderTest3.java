@@ -1,11 +1,9 @@
 package com.tuling.jvm;
 
-import sun.misc.PerfCounter;
-
 import java.io.FileInputStream;
 import java.lang.reflect.Method;
 
-public class MyClassLoaderTest2 {
+public class MyClassLoaderTest3{
     static class MyClassLoader extends ClassLoader {
         private String classPath;
 
@@ -37,7 +35,6 @@ public class MyClassLoaderTest2 {
 
         /**
          * 重写类加载方法，实现自己的加载逻辑，不委派给双亲加载
-         *
          * @param name
          * @param resolve
          * @return
@@ -53,16 +50,17 @@ public class MyClassLoaderTest2 {
                     // If still not found, then invoke findClass in order
                     // to find the class.
                     long t1 = System.nanoTime();
-                    if (!name.startsWith("com.tuling")) {
-                        c = this.getParent().loadClass(name);
-                    } else {
-                        //com.tuling下的包加载才打破双亲委派机制
-                        c = findClass(name);
 
+                    //非自定义的类还是走双亲委派加载
+                    if (!name.startsWith("com.tuling.jvm")){
+                        c = this.getParent().loadClass(name);
+                    }else{
+                        c = findClass(name);
                     }
+
                     // this is the defining class loader; record the stats
-                    PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
-                    PerfCounter.getFindClasses().increment();
+                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                    sun.misc.PerfCounter.getFindClasses().increment();
                 }
                 if (resolve) {
                     resolveClass(c);
@@ -74,11 +72,18 @@ public class MyClassLoaderTest2 {
 
     public static void main(String args[]) throws Exception {
         MyClassLoader classLoader = new MyClassLoader("D:/test");
-        //尝试用自己改写类加载机制去加载自己写的java.lang.String.class
-        Class clazz = classLoader.loadClass("java.lang.String");
+        Class clazz = classLoader.loadClass("com.tuling.jvm.User1");
         Object obj = clazz.newInstance();
-        Method method = clazz.getDeclaredMethod("sout", null);
+        Method method= clazz.getDeclaredMethod("sout", null);
         method.invoke(obj, null);
-        System.out.println(clazz.getClassLoader().getClass().getName());
+        System.out.println(clazz.getClassLoader());
+        
+        System.out.println();
+        MyClassLoader classLoader1 = new MyClassLoader("D:/test1");
+        Class clazz1 = classLoader1.loadClass("com.tuling.jvm.User1");
+        Object obj1 = clazz1.newInstance();
+        Method method1= clazz1.getDeclaredMethod("sout", null);
+        method1.invoke(obj1, null);
+        System.out.println(clazz1.getClassLoader());
     }
 }

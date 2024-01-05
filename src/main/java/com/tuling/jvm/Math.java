@@ -3,6 +3,8 @@ package com.tuling.jvm;
 public class Math {
 
     public static final int initData = 666;
+    public Integer cscs = 666;
+
 
     public int compute() {  //一个方法对应一块栈帧内存区域
         int a = 1;
